@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Biaya Pengiriman Ekspedisi</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f6f8; margin: 0; padding: 20px; display: flex; justify-content: center; align-items: center; height: 100vh; }
+        .card { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); width: 100%; max-width: 420px; }
+        h2 { color: #333; text-align: center; margin-bottom: 20px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; color: #555; font-weight: bold; }
+        input { width: 100%; padding: 8px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
+        button { width: 100%; background-color: #007bff; color: white; border: none; padding: 10px; border-radius: 4px; font-size: 16px; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+        .result { margin-top: 20px; background: #e9ecef; padding: 15px; border-radius: 4px; }
+        .result p { margin: 6px 0; color: #333; font-size: 14px; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>Kalkulator Pengiriman Paket</h2>
+    
+    <div class="form-group">
+        <label for="berat">Berat Paket (kg):</label>
+        <input type="number" id="berat" value="3" min="1">
+    </div>
+    
+    <div class="form-group">
+        <label for="jarak">Jarak Pengiriman (km):</label>
+        <input type="number" id="jarak" value="15" min="1">
+    </div>
+    
+    <div class="form-group">
+        <label for="diskon">Diskon Promo (Rp):</label>
+        <input type="number" id="diskon" value="5000" min="0">
+    </div>
+    
+    <button onclick="hitungBiaya()">Hitung Total Biaya</button>
+
+    <div class="result" id="hasilBox" style="display:none;">
+        <h3>Rincian Perhitungan:</h3>
+        <p id="resPerkalian"></p>
+        <p id="resPembagian"></p>
+        <p id="resPenjumlahan"></p>
+        <p id="resPengurangan"></p>
+        <p id="resTotal" style="font-weight: bold; font-size: 16px; margin-top: 10px; color: #007bff;"></p>
+    </div>
+</div>
+
+<script>
+    // 1. NILAI KONSTANTA
+    const BIAYA_ADMIN_TETAP = 3000; // Biaya admin sistem (Konstanta)
+    const TARIF_PER_KG = 10000;     // Tarif dasar per kilogram (Konstanta)
+
+    function hitungBiaya() {
+        let berat = parseFloat(document.getElementById('berat').value) || 0;
+        let jarak = parseFloat(document.getElementById('jarak').value) || 0;
+        let diskon = parseFloat(document.getElementById('diskon').value) || 0;
+
+        // 2. PERKALIAN: Menghitung biaya dasar dari berat paket dikali tarif konstanta
+        let biayaDasar = berat * TARIF_PER_KG;
+
+        // 3. PEMBAGIAN: Menghitung faktor zona jarak (misal: pembagian per 5 km)
+        let zonaJarak = jarak / 5;
+
+        // 4. PENJUMLAHAN: Menjumlahkan biaya dasar, biaya admin tetap, dan tambahan biaya zona
+        let subtotal = biayaDasar + BIAYA_ADMIN_TETAP + (zonaJarak * 2000);
+
+        // 5. PENGURANGAN: Mengurangkan subtotal dengan nominal diskon promo
+        let totalAkhir = subtotal - diskon;
+
+        // Menampilkan hasil pada elemen HTML
+        document.getElementById('hasilBox').style.display = 'block';
+        document.getElementById('resPerkalian').innerText = `• Perkalian (Berat x Tarif): Rp ${biayaDasar}`;
+        document.getElementById('resPembagian').innerText = `• Pembagian (Jarak / 5 km): ${zonaJarak} Zona`;
+        document.getElementById('resPenjumlahan').innerText = `• Penjumlahan (Subtotal + Admin): Rp ${subtotal}`;
+        document.getElementById('resPengurangan').innerText = `• Pengurangan (Subtotal - Diskon): Rp ${diskon}`;
+        document.getElementById('resTotal').innerText = `Total Biaya Akhir: Rp ${totalAkhir}`;
+    }
+</script>
+
+</body>
+</html>
